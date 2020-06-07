@@ -99,16 +99,11 @@ function mt4accounts_get_api()
 {
     $api_key = mt4accounts_get_api_key();
     $api_url = mt4accounts_get_api_url();
-    $instance = new MT4_Accounts_API($api_key, $api_url);
+    $instance = new MT4_Accounts_API($api_url);
     return $instance;
 }
 
 
-/**
- * Creates a new instance of the Debug Log
- *
- * @return MC4WP_Debug_Log
- */
 function mt4accounts_get_debug_log()
 {
     $opts = mt4accounts_get_options();

@@ -12,7 +12,7 @@
 
         $headings = array(
             __('AccountNumber', 'mt4accounts-for-wp'),
-            __('Name', 'mt4accounts-for-wp'),
+//            __('Name', 'mt4accounts-for-wp'),
             __('Broker', 'mt4accounts-for-wp')
         );
 
@@ -27,7 +27,7 @@
         foreach ($accounts as $account) {
             echo '<tr>';
             echo sprintf('<td>%s</td>', esc_html($account->account_number));
-            echo sprintf('<td>%s</td>', esc_html($account->name));
+  //          echo sprintf('<td>%s</td>', esc_html($account->name));
             echo sprintf('<td>%s</td>', esc_html($account->broker_server_name));
             echo '</tr>';
         }
