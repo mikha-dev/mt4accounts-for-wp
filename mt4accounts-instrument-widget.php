@@ -13,7 +13,7 @@ class MT4_Instrument_Plugin{
     // load js and css files
     add_action( "wp_enqueue_scripts", array( &$this, 'wp_enqueue_scripts' ) );
 
-    add_shortcode( "mt4_instrument", array( &$this, 'shortcode_mt4_instrument' ) );
+    add_shortcode( "mt4_instruments", array( &$this, 'shortcode_mt4_instrument' ) );
   }
 
   function mt4_instrument_header() {
