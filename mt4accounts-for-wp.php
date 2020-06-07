@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: MT4 Subscriptions
+Plugin Name: MT4 Accounts
 Plugin URI: http://dev4traders.com
-Description: mt4subscriptions for WordPress.
+Description: MT4 Accounts for WordPress.
 Version: 1.0.0
 Author: dev4traders
 Author URI: http://dev4traders.com
-Text Domain: mt4subscriptions-for-wp
+Text Domain: mt4accounts-for-wp
 Domain Path: /languages
  */
 
