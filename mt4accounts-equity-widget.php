@@ -39,7 +39,7 @@ class MT4_Equity_Plugin {
 
   }
 
-  function format_equity_output($attribures) {
+  function format_equity_output($attributes) {
     global $mt4accounts;
 
     $account_number = '';
@@ -47,15 +47,16 @@ class MT4_Equity_Plugin {
     if (isset($attributes['account_number'])){
       $account_number = $attributes['account_number'];
     } else {
-      $account_number = $_REQUEST['acc'];
+      if( isset($_REQUEST['acc']))
+        $account_number = $_REQUEST['acc'];
     }
 
     if(empty($account_number)) {
       return false;
     }
 
-   if(isset($params['template']))
-      $template = $params['template']?$params['template']:'default';
+   if(isset($attributes['template']))
+      $template = $attributes['template']?$attributes['template']:'default';
     else
       $template = 'default';
 
@@ -66,7 +67,7 @@ class MT4_Equity_Plugin {
 
     ob_start();
 
-    $items = $mt4accounts->get_equity();
+    $items = mt4accounts_get_api()->get_equity($account_number);
 
     include_once( dirname( __FILE__ ) . "/templates/{$template}/equity.php");
 
