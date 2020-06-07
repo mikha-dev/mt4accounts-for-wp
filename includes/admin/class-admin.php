@@ -280,7 +280,7 @@ class MT4_Accounts_Admin
         $menu_items = (array) apply_filters('mt4accounts_admin_menu_items', $menu_items);
 
         // add top menu item
-        add_menu_page('MT4Accounts for WP', 'MT4ACCOUNTS', $required_cap, 'mt4accounts-for-wp', array( $this, 'show_generals_setting_page' ), MT4_ACCOUNTS_PLUGIN_URL . 'assets/img/icon.png', '99.68491');
+        add_menu_page('MT4Accounts for WP', 'MT4 Accounts', $required_cap, 'mt4accounts-for-wp', array( $this, 'show_generals_setting_page' ), MT4_ACCOUNTS_PLUGIN_URL . 'assets/img/icon.png', '99.68491');
 
         // sort submenu items by 'position'
         usort($menu_items, array( $this, 'sort_menu_items_by_position' ));
