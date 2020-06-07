@@ -9,7 +9,7 @@ defined('ABSPATH') or exit;
 		<div class="main-content col col-4">
 
 			<h1 class="page-title">
-                MT4Subscriptions for WordPress: <?php _e('API Settings', 'mt4accounts-for-wp'); ?>
+                MT4 Accounts for WordPress: <?php _e('API Settings', 'mt4accounts-for-wp'); ?>
 			</h1>
 
 			<h2 style="display: none;"></h2>
