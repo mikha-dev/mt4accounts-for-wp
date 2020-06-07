@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class MT4WP_Service_Container
+ * Class MT4_Accounts_Service_Container
  *
  * @access private
  * @ignore
  */
-class MT4WP_Container implements ArrayAccess
+class MT4_Accounts_Container implements ArrayAccess
 {
 
     /**

@@ -1,17 +1,12 @@
 <?php
 
-class MT4WP_API_Client
+class MT4_Accounts_Api_Client
 {
-
-  /**
-  * @var string
-  */
-    private $api_key;
 
     /**
     * @var string
     */
-    private $api_url = 'http://192.168.88.241:8000/';
+    private $api_url = 'http://localhost/';
 
     /**
     * @var array
@@ -23,14 +18,8 @@ class MT4WP_API_Client
     */
     private $last_request;
 
-    /**
-    * Constructor
-    *
-    * @param string $api_key
-    */
-    public function __construct($api_key, $api_url)
+    public function __construct($api_url)
     {
-        $this->api_key = $api_key;
         $this->api_url = $api_url;
     }
 
@@ -39,7 +28,7 @@ class MT4WP_API_Client
     * @param array $args
     *
     * @return mixed
-    * @throws MT4WP_API_Exception
+    * @throws MT4_Accounts_Api_Exception
     */
     public function get($resource, array $args = array())
     {
@@ -51,7 +40,7 @@ class MT4WP_API_Client
     * @param array $data
     *
     * @return mixed
-    * @throws MT4WP_API_Exception
+    * @throws MT4_Accounts_Api_Exception
     */
     public function post($resource, array $data)
     {
@@ -62,7 +51,7 @@ class MT4WP_API_Client
     * @param string $resource
     * @param array $data
     * @return mixed
-    * @throws MT4WP_API_Exception
+    * @throws MT4_Accounts_Api_Exception
     */
     public function put($resource, array $data)
     {
@@ -73,7 +62,7 @@ class MT4WP_API_Client
     * @param string $resource
     * @param array $data
     * @return mixed
-    * @throws MT4WP_API_Exception
+    * @throws MT4_Accounts_Api_Exception
     */
     public function patch($resource, array $data)
     {
@@ -83,7 +72,7 @@ class MT4WP_API_Client
     /**
     * @param string $resource
     * @return mixed
-    * @throws MT4WP_API_Exception
+    * @throws MT4_Accounts_Api_Exception
     */
     public function delete($resource)
     {
@@ -97,16 +86,11 @@ class MT4WP_API_Client
     *
     * @return mixed
     *
-    * @throws MT4WP_API_Exception
+    * @throws MT4_Accounts_Api_Exception
     */
     private function request($method, $resource, array $data = array())
     {
         $this->reset();
-
-        // don't bother if no API key was given.
-        if (empty($this->api_key)) {
-            throw new MT4WP_API_Exception("Missing API key", 001);
-        }
 
         $url = $this->api_url . ltrim($resource, '/');
         $args = array(
@@ -114,7 +98,7 @@ class MT4WP_API_Client
           'method' => $method,
           'headers' => $this->get_headers(),
           'timeout' => 10,
-          'sslverify' => apply_filters('mt4wp_use_sslverify', true),
+          'sslverify' => apply_filters('mt4accounts_use_sslverify', true),
         );
 
         if (! empty($data)) {
@@ -130,7 +114,7 @@ class MT4WP_API_Client
         *
         * @param array $args
         */
-        $args = apply_filters('mt4wp_http_request_args', $args, $url);
+        $args = apply_filters('mt4accounts_http_request_args', $args, $url);
 
         // perform request
         $response = wp_remote_request($url, $args);
@@ -153,10 +137,9 @@ class MT4WP_API_Client
         global $wp_version;
 
         $headers = array();
-        $headers['Authorization'] = 'Bearer ' . $this->api_key;
         $headers['Accept'] = 'application/json';
         $headers['Content-Type'] = 'application/json';
-        $headers['User-Agent'] = 'mt4wp/' . MT4WP_VERSION . '; WordPress/' . $wp_version . '; ' . get_bloginfo('url');
+        $headers['User-Agent'] = 'mt4accounts/' . MT4_ACCOUNTS_VERSION . '; WordPress/' . $wp_version . '; ' . get_bloginfo('url');
 
         // Copy Accept-Language from browser headers
         if (! empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -171,12 +154,12 @@ class MT4WP_API_Client
     *
     * @return mixed
     *
-    * @throws MT4WP_API_Connection_Exception|MT4WP_API_Resource_Not_Found_Exception|MT4WP_API_Exception
+    * @throws MT4_Accounts_Api_Connection_Exception|MT4_Accounts_Api_Resource_Not_Found_Exception|MT4_Accounts_Api_Exception
     */
     private function parse_response($response)
     {
         if ($response instanceof WP_Error) {
-            throw new MT4WP_API_Connection_Exception($response->get_error_message(), (int) $response->get_error_code(), $this->last_request);
+            throw new MT4_Accounts_Api_Connection_Exception($response->get_error_message(), (int) $response->get_error_code(), $this->last_request);
         }
 
         // decode response body
@@ -194,20 +177,20 @@ class MT4WP_API_Client
             // check for akamai errors
             // {"type":"akamai_error_message","title":"akamai_503","status":503,"ref_no":"Reference Number: 00.950e16c3.1498559813.1450dbe2"}
             if (is_object($data) && isset($data->type) && $data->type === 'akamai_error_message') {
-                throw new MT4WP_API_Connection_Exception($message, $code, $this->last_request, $this->last_response, $data);
+                throw new MT4_Accounts_Api_Connection_Exception($message, $code, $this->last_request, $this->last_response, $data);
             }
 
             if ($code === 404) {
-                throw new MT4WP_API_Resource_Not_Found_Exception($message, $code, $this->last_request, $this->last_response, $data);
+                throw new MT4_Accounts_Api_Resource_Not_Found_Exception($message, $code, $this->last_request, $this->last_response, $data);
             }
 
             // mailchimp returned an error..
-            throw new MT4WP_API_Exception($message, $code, $this->last_request, $this->last_response, $data);
+            throw new MT4_Accounts_Api_Exception($message, $code, $this->last_request, $this->last_response, $data);
         }
 
         // unable to decode response
         if (is_null($data)) {
-            throw new MT4WP_API_Exception($message, $code, $this->last_request, $this->last_response);
+            throw new MT4_Accounts_Api_Exception($message, $code, $this->last_request, $this->last_response);
         }
 
         return $data;

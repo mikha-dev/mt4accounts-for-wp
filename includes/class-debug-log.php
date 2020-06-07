@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Class MT4WP_Debug_Log
+ * Class MT4_Accounts_Debug_Log
  *
  * Simple logging class which writes to a file, loosely based on PSR-3.
  */
-class MT4WP_Debug_Log
+class MT4_Accounts_Debug_Log
 {
 
     /**
@@ -90,7 +90,7 @@ class MT4WP_Debug_Log
 
         // first, get rid of everything between "invisible" tags
         $message = preg_replace('/<(?:style|script|head)>.+?<\/(?:style|script|head)>/is', '', $message);
-          
+
         // then, strip tags (while retaining content of these tags)
         $message = strip_tags($message);
         $message = trim($message);

@@ -5,8 +5,8 @@
  *
  * _Example:_
  *
- * $forms = mt4wp('forms');
- * $api = mt4wp('api');
+ * $forms = mt4accounts('forms');
+ * $api = mt4accounts('api');
  *
  * When no service parameter is given, the entire container will be returned.
  *
@@ -18,19 +18,19 @@
  *
  * @throws Exception when service is not found
  */
-function mt4wp($service = null)
+function mt4accounts($service = null)
 {
-    static $mt4wp;
+    static $mt4accounts;
 
-    if (!$mt4wp) {
-        $mt4wp = new MT4WP_Container();
+    if (!$mt4accounts) {
+        $mt4accounts = new MT4_Accounts_Container();
     }
 
     if ($service) {
-        return $mt4wp->get($service);
+        return $mt4accounts->get($service);
     }
 
-    return $mt4wp;
+    return $mt4accounts;
 }
 
 /**
@@ -42,10 +42,10 @@ function mt4wp($service = null)
  * @static array $options
  * @return array
  */
-function mt4wp_get_options()
+function mt4accounts_get_options()
 {
-    $defaults = require MT4WP_PLUGIN_DIR . 'config/default-settings.php';
-    $options = (array) get_option('mt4wp', array());
+    $defaults = require MT4_ACCOUNTS_PLUGIN_DIR . 'config/default-settings.php';
+    $options = (array) get_option('mt4accounts', array());
     $options = array_merge($defaults, $options);
 
     /**
@@ -53,37 +53,37 @@ function mt4wp_get_options()
      *
      * @param array $options
      */
-    return apply_filters('mt4wp_settings', $options);
+    return apply_filters('mt4accounts_settings', $options);
 }
 
 /**
  * @return array
  */
-function mt4wp_get_settings() {
-    return mt4wp_get_options();
+function mt4accounts_get_settings() {
+    return mt4accounts_get_options();
 }
 
-function mt4wp_get_api_key()
+function mt4accounts_get_api_key()
 {
     // try to get from constant
-    if (defined('MT4WP_API_KEY') && constant('MT4WP_API_KEY') !== '') {
-        return MT4WP_API_KEY;
+    if (defined('MT4_ACCOUNTS_API_KEY') && constant('MT4_ACCOUNTS_API_KEY') !== '') {
+        return MT4_ACCOUNTS_API_KEY;
     }
 
     // get from options
-    $opts = mt4wp_get_options();
+    $opts = mt4accounts_get_options();
     return $opts['api_key'];
 }
 
-function mt4wp_get_api_url()
+function mt4accounts_get_api_url()
 {
     // try to get from constant
-    if (defined('MT4WP_API_URL') && constant('MT4WP_API_URL') !== '') {
-        return MT4WP_API_URL;
+    if (defined('MT4_ACCOUNTS_API_URL') && constant('MT4_ACCOUNTS_API_URL') !== '') {
+        return MT4_ACCOUNTS_API_URL;
     }
 
     // get from options
-    $opts = mt4wp_get_options();
+    $opts = mt4accounts_get_options();
     return $opts['api_url'];
 }
 
@@ -95,11 +95,11 @@ function mt4wp_get_api_url()
  *
  * @return MC4WP_API_v3
  */
-function mt4wp_get_api()
+function mt4accounts_get_api()
 {
-    $api_key = mt4wp_get_api_key();
-    $api_url = mt4wp_get_api_url();
-    $instance = new MT4WP_API($api_key, $api_url);
+    $api_key = mt4accounts_get_api_key();
+    $api_url = mt4accounts_get_api_url();
+    $instance = new MT4_Accounts_API($api_key, $api_url);
     return $instance;
 }
 
@@ -109,20 +109,20 @@ function mt4wp_get_api()
  *
  * @return MC4WP_Debug_Log
  */
-function mt4wp_get_debug_log()
+function mt4accounts_get_debug_log()
 {
-    $opts = mt4wp_get_options();
+    $opts = mt4accounts_get_options();
 
     // get default log file location
     $upload_dir = wp_upload_dir(null, false);
-    $file = trailingslashit($upload_dir['basedir']) . 'mt4wp-debug-log.php';
+    $file = trailingslashit($upload_dir['basedir']) . 'mt4accounts-debug-log.php';
 
     /**
      * Filters the log file to write to.
      *
      * @param string $file The log file location. Default: /wp-content/uploads/mt4wp-debug.log
      */
-    $file = apply_filters('mt4wp_debug_log_file', $file);
+    $file = apply_filters('mt4accounts_debug_log_file', $file);
 
     /**
      * Filters the minimum level to log messages.
@@ -131,9 +131,9 @@ function mt4wp_get_debug_log()
      *
      * @param string|int $level The minimum level of messages which should be logged.
      */
-    $level = apply_filters('mt4wp_debug_log_level', $opts['debug_log_level']);
+    $level = apply_filters('mt4accounts_debug_log_level', $opts['debug_log_level']);
 
-    return new MT4WP_Debug_Log($file, $level);
+    return new MT4_Accounts_Debug_Log($file, $level);
 }
 
 
@@ -142,7 +142,7 @@ function mt4wp_get_debug_log()
  *
  * @return string
  */
-function mt4wp_get_request_url()
+function mt4accounts_get_request_url()
 {
     global $wp;
 
@@ -166,7 +166,7 @@ function mt4wp_get_request_url()
  *
  * @return string
  */
-function mt4wp_get_request_path()
+function mt4accounts_get_request_path()
 {
     return $_SERVER['REQUEST_URI'];
 }
@@ -176,7 +176,7 @@ function mt4wp_get_request_path()
 *
 * @return string
 */
-function mt4wp_get_request_ip_address()
+function mt4accounts_get_request_ip_address()
 {
     $headers = (function_exists('apache_request_headers')) ? apache_request_headers() : $_SERVER;
 
@@ -191,181 +191,7 @@ function mt4wp_get_request_ip_address()
     return $_SERVER['REMOTE_ADDR'];
 }
 
-/**
- * Strips all HTML tags from all values in a mixed variable, then trims the result.
- *
- * @access public
- * @param mixed $value
- *
- * @return mixed
- */
-function mt4wp_sanitize_deep($value)
-{
-    if (is_scalar($value)) {
-        // strip all HTML tags & whitespace
-        $value = trim(strip_tags($value));
-
-        // convert &amp; back to &
-        $value = html_entity_decode($value, ENT_NOQUOTES);
-    } elseif (is_array($value)) {
-        $value = array_map('mt4wp_sanitize_deep', $value);
-    } elseif (is_object($value)) {
-        $vars = get_object_vars($value);
-        foreach ($vars as $key => $data) {
-            $value->{$key} = mt4wp_sanitize_deep($data);
-        }
-    }
-
-    return $value;
-}
-
-/**
- *
- * @since 4.0
- * @ignore
- *
- * @param array $data
- * @return array
- */
-function _mt4wp_update_groupings_data($data = array())
-{
-
-    // data still has old "GROUPINGS" key?
-    if (empty($data['GROUPINGS'])) {
-        return $data;
-    }
-
-    // prepare new key
-    if (!isset($data['INTERESTS'])) {
-        $data['INTERESTS'] = array();
-    }
-
-    $map = get_option('mt4wp_groupings_map', array());
-
-    foreach ($data['GROUPINGS'] as $grouping_id => $groups) {
-
-        // for compatibility with expanded grouping arrays
-        $grouping_key = $grouping_id;
-        if (is_array($groups) && isset($groups['id']) && isset($groups['groups'])) {
-            $grouping_id = $groups['id'];
-            $groups = $groups['groups'];
-        }
-
-        // do we have transfer data for this grouping id?
-        if (!isset($map[$grouping_id])) {
-            continue;
-        }
-
-        // if we get a string, explode on delimiter(s)
-        if (is_string($groups)) {
-            // for BC with 3.x: explode on comma's
-            $groups = join('|', explode(',', $groups));
-
-            // explode on current delimiter
-            $groups = explode('|', $groups);
-        }
-
-        // loop through groups and find interest ID
-        $migrated = 0;
-        foreach ($groups as $key => $group_name_or_id) {
-
-            // do we know the new interest ID?
-            if (empty($map[$grouping_id]['groups'][$group_name_or_id])) {
-                continue;
-            }
-
-            $interest_id = $map[$grouping_id]['groups'][$group_name_or_id];
-
-            // add to interests data
-            if (!in_array($interest_id, $data['INTERESTS'])) {
-                $migrated++;
-                $data['INTERESTS'][] = $interest_id;
-            }
-        }
-
-        // remove old grouping ID if we migrated all groups.
-        if ($migrated === count($groups)) {
-            unset($data['GROUPINGS'][$grouping_key]);
-        }
-    }
-
-    // if everything went well, this is now empty & moved to new INTERESTS key.
-    if (empty($data['GROUPINGS'])) {
-        unset($data['GROUPINGS']);
-    }
-
-    // is this empty? just unset it then.
-    if (empty($data['INTERESTS'])) {
-        unset($data['INTERESTS']);
-    }
-
-    return $data;
-}
-
-/**
- * Guesses merge vars based on given data & current request.
- *
- * @since 3.0
- * @access public
- *
- * @param array $data
- *
- * @return array
- */
-function mt4wp_add_name_data($data = array())
-{
-
-    // Guess first and last name
-    if (!empty($data['NAME']) && empty($data['FNAME']) && empty($data['LNAME'])) {
-        $data['NAME'] = trim($data['NAME']);
-        $strpos = strpos($data['NAME'], ' ');
-
-        if ($strpos !== false) {
-            $data['FNAME'] = trim(substr($data['NAME'], 0, $strpos));
-            $data['LNAME'] = trim(substr($data['NAME'], $strpos));
-        } else {
-            $data['FNAME'] = $data['NAME'];
-        }
-    }
-
-    // Set name value
-    if (empty($data['NAME']) && !empty($data['FNAME']) && !empty($data['LNAME'])) {
-        $data['NAME'] = sprintf('%s %s', $data['FNAME'], $data['LNAME']);
-    }
-
-    return $data;
-}
-
-/**
- * Gets the "email type" for new subscribers.
- *
- * Possible return values are either "html" or "text"
- *
- * @access public
- * @since 3.0
- *
- * @return string
- */
-function mt4wp_get_email_type()
-{
-    $email_type = 'html';
-
-    /**
-     * Filters the email type preference for this new subscriber.
-     *
-     * @param string $email_type
-     */
-    $email_type = (string)apply_filters('mt4wp_email_type', $email_type);
-
-    return $email_type;
-}
-
-/**
- *
- * @ignore
- * @return bool
- */
-function _mt4wp_use_sslverify()
+function mt4accounts_use_sslverify()
 {
 
     // Disable for all transports other than CURL
@@ -386,81 +212,4 @@ function _mt4wp_use_sslverify()
     }
 
     return true;
-}
-
-/**
- * This will replace the first half of a string with "*" characters.
- *
- * @param string $string
- * @return string
- */
-function mt4wp_obfuscate_string($string)
-{
-    $length = strlen($string);
-    $obfuscated_length = ceil($length / 2);
-    $string = str_repeat('*', $obfuscated_length) . substr($string, $obfuscated_length);
-    return $string;
-}
-
-/**
- * @internal
- * @ignore
- */
-function _mt4wp_obfuscate_email_addresses_callback($m)
-{
-    $one = $m[1] . str_repeat('*', strlen($m[2]));
-    $two = $m[3] . str_repeat('*', strlen($m[4]));
-    $three = $m[5];
-    return sprintf('%s@%s.%s', $one, $two, $three);
-}
-
-/**
- * Obfuscates email addresses in a string.
- *
- * @param $string String possibly containing email address
- * @return string
- */
-function mt4wp_obfuscate_email_addresses($string)
-{
-    return preg_replace_callback('/([\w\.]{1,4})([\w\.]*)\@(\w{1,2})(\w*)\.(\w+)/', '_mt4wp_obfuscate_email_addresses_callback', $string);
-}
-
-/**
- * Refreshes Mailchimp lists. This can take a while if the connected Mailchimp account has many lists.
- *
- * @return void
- */
-function mt4wp_refresh_mailchimp_lists()
-{
-    $mailchimp = new MC4WP_MailChimp();
-    $mailchimp->fetch_lists();
-}
-
-/**
-* Get element from array, allows for dot notation eg: "foo.bar"
-*
-* @param array $array
-* @param string $key
-* @param mixed $default
-* @return mixed
-*/
-function mt4wp_array_get($array, $key, $default = null)
-{
-    if (is_null($key)) {
-        return $array;
-    }
-
-    if (isset($array[$key])) {
-        return $array[$key];
-    }
-
-    foreach (explode('.', $key) as $segment) {
-        if (! is_array($array) || ! array_key_exists($segment, $array)) {
-            return $default;
-        }
-
-        $array = $array[$segment];
-    }
-
-    return $array;
 }

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Class MT4WP_API_Exception
+ * Class MT4_Accounts_Api_Exception
  *
  * @property string $title
  * @property string $detail
  * @property array $errors
  */
-class MT4WP_API_Exception extends Exception
+class MT4_Accounts_Api_Exception extends Exception
 {
 
 
@@ -27,7 +27,7 @@ class MT4WP_API_Exception extends Exception
     public $response_data = array();
 
     /**
-     * MT4WP_API_Exception constructor.
+     * MT4_Accounts_Api_Exception constructor.
      *
      * @param string $message
      * @param int $code

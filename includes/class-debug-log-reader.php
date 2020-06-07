@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class MT4WP_Debug_Log_Reader
+ * Class MT4_Accounts_Debug_Log_Reader
  */
-class MT4WP_Debug_Log_Reader
+class MT4_Accounts_Debug_Log_Reader
 {
 
     /**

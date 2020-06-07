@@ -1,12 +1,12 @@
 <?php
 
 /**
-* Class MT4WP_Admin
+* Class MT4_ACCOUNTS_Admin
 *
 * @ignore
 * @access private
 */
-class MT4WP_Admin
+class MT4_Accounts_Admin
 {
 
     /**
@@ -15,27 +15,26 @@ class MT4WP_Admin
     protected $plugin_file;
 
     /**
-    * @var MT4WP_Admin_Messages
+    * @var MT4_Accounts_Admin_Messages
     */
     protected $messages;
 
     /**
-    * @var MT4WP_Admin_Tools
+    * @var MT4_Accounts_Admin_Tools
     */
     protected $tools;
 
     /**
     * Constructor
     *
-    * @param MT4WP_Admin_Tools $tools
-    * @param MT4WP_Admin_Messages $messages
-    * @param MT4WP_MailChimp      $mailchimp
+    * @param MT4_Accounts_Admin_Tools $tools
+    * @param MT4_Accounts_Admin_Messages $messages
     */
-    public function __construct(MT4WP_Admin_Tools $tools, MT4WP_Admin_Messages $messages)
+    public function __construct(MT4_Accounts_Admin_Tools $tools, MT4_Accounts_Admin_Messages $messages)
     {
         $this->tools = $tools;
         $this->messages = $messages;
-        $this->plugin_file = plugin_basename(MT4WP_PLUGIN_FILE);
+        $this->plugin_file = plugin_basename(MT4_ACCOUNTS_PLUGIN_FILE);
     }
 
     /**
@@ -50,11 +49,8 @@ class MT4WP_Admin
 
         add_action('current_screen', array( $this, 'customize_admin_texts' ));
         add_action('wp_dashboard_setup', array( $this, 'register_dashboard_widgets' ));
-        add_action('mt4wp_admin_connect_roles_subscriptions', array( $this, 'connect_roles_subscriptions' ));
-        add_action('mt4wp_admin_empty_debug_log', array( $this, 'empty_debug_log' ));
+        add_action('mt4accounts_admin_empty_debug_log', array( $this, 'empty_debug_log' ));
 
-        add_action('admin_notices', array( $this, 'show_api_key_notice' ));
-        add_action('mt4wp_admin_dismiss_api_key_notice', array( $this, 'dismiss_api_key_notice' ));
         add_action('admin_enqueue_scripts', array( $this, 'enqueue_assets' ));
 
         $this->messages->add_hooks();
@@ -69,7 +65,7 @@ class MT4WP_Admin
     {
 
         // register settings
-        register_setting('mt4wp_settings', 'mt4wp', array( $this, 'save_general_settings' ));
+        register_setting('mt4accounts_settings', 'mt4accounts', array( $this, 'save_general_settings' ));
 
         // Load upgrader
         $this->init_upgrade_routines();
@@ -80,20 +76,20 @@ class MT4WP_Admin
 
 
     /**
-    * Listen for `_mt4wp_action` requests
+    * Listen for `_mt4accounts_action` requests
     */
     public function listen_for_actions()
     {
 
         // listen for any action (if user is authorised)
-        if (! $this->tools->is_user_authorized() || ! isset($_REQUEST['_mt4wp_action'])) {
+        if (! $this->tools->is_user_authorized() || ! isset($_REQUEST['_mt4accounts_action'])) {
             return false;
         }
 
-        $action = (string) $_REQUEST['_mt4wp_action'];
+        $action = (string) $_REQUEST['_mt4accounts_action'];
 
         /**
-        * Allows you to hook into requests containing `_mt4wp_action` => action name.
+        * Allows you to hook into requests containing `_mt4accounts_action` => action name.
         *
         * The dynamic portion of the hook name, `$action`, refers to the action name.
         *
@@ -102,10 +98,10 @@ class MT4WP_Admin
         *
         * @since 3.0
         */
-        do_action('mt4wp_admin_' . $action);
+        do_action('mt4accounts_admin_' . $action);
 
         // redirect back to where we came from
-        $redirect_url = ! empty($_POST['_redirect_to']) ? $_POST['_redirect_to'] : remove_query_arg('_mt4wp_action');
+        $redirect_url = ! empty($_POST['_redirect_to']) ? $_POST['_redirect_to'] : remove_query_arg('_mt4accounts_action');
         wp_redirect($redirect_url);
         exit;
     }
@@ -127,7 +123,7 @@ class MT4WP_Admin
         * @since 3.0
         * @ignore
         */
-        do_action('mt4wp_dashboard_setup');
+        do_action('mt4accounts_dashboard_setup');
 
         return true;
     }
@@ -139,41 +135,41 @@ class MT4WP_Admin
     {
 
         // upgrade routine for upgrade routine....
-        $previous_version = get_option('mt4wp_lite_version', 0);
+        $previous_version = get_option('mt4accounts_lite_version', 0);
         if ($previous_version) {
-            delete_option('mt4wp_lite_version');
-            update_option('mt4wp_version', $previous_version);
+            delete_option('mt4accounts_lite_version');
+            update_option('mt4accounts_version', $previous_version);
         }
 
-        $previous_version = get_option('mt4wp_version', 0);
+        $previous_version = get_option('mt4accounts_version', 0);
 
         // allow setting migration version from URL, to easily re-run previous migrations.
-        if (isset($_GET['mt4wp_run_migration'])) {
-            $previous_version = $_GET['mt4wp_run_migration'];
+        if (isset($_GET['mt4accounts_run_migration'])) {
+            $previous_version = $_GET['mt4accounts_run_migration'];
         }
 
         // Ran upgrade routines before?
         if (empty($previous_version)) {
-            update_option('mt4wp_version', MT4WP_VERSION);
+            update_option('mt4accounts_version', MT4_ACCOUNTS_VERSION);
 
             $previous_version = '3.9';
         }
 
         // Rollback'ed?
-        if (version_compare($previous_version, MT4WP_VERSION, '>')) {
-            update_option('mt4wp_version', MT4WP_VERSION);
+        if (version_compare($previous_version, MT4_ACCOUNTS_VERSION, '>')) {
+            update_option('mt4accounts_version', MT4_ACCOUNTS_VERSION);
             return false;
         }
 
         // This means we're good!
-        if (version_compare($previous_version, MT4WP_VERSION) > -1) {
+        if (version_compare($previous_version, MT4_ACCOUNTS_VERSION) > -1) {
             return false;
         }
 
-        define('MT4WP_DOING_UPGRADE', true);
-        $upgrade_routines = new MT4WP_Upgrade_Routines($previous_version, MT4WP_VERSION, dirname(__FILE__) . '/migrations');
+        define('MT4_ACCOUNTS_DOING_UPGRADE', true);
+        $upgrade_routines = new MT4_ACCOUNTS_Upgrade_Routines($previous_version, MT4_ACCOUNTS_VERSION, dirname(__FILE__) . '/migrations');
         $upgrade_routines->run();
-        update_option('mt4wp_version', MT4WP_VERSION);
+        update_option('mt4accounts_version', MT4_ACCOUNTS_VERSION);
     }
 
     /**
@@ -182,7 +178,7 @@ class MT4WP_Admin
     private function load_translations()
     {
         // load the plugin text domain
-        load_plugin_textdomain('mt4subscriptions-for-wp', false, dirname($this->plugin_file) . '/languages');
+        load_plugin_textdomain('mt4accounts-for-wp', false, dirname($this->plugin_file) . '/languages');
     }
 
     /**
@@ -190,7 +186,7 @@ class MT4WP_Admin
     */
     public function customize_admin_texts()
     {
-        $texts = new MT4WP_Admin_Texts($this->plugin_file);
+        $texts = new MT4_Accounts_Admin_Texts($this->plugin_file);
         $texts->add_hooks();
     }
 
@@ -201,14 +197,14 @@ class MT4WP_Admin
     */
     public function save_general_settings(array $settings)
     {
-        $current = mt4wp_get_options();
+        $current = mt4accounts_get_options();
 
         // merge with current settings to allow passing partial arrays to this method
         $settings = array_merge($current, $settings);
 
         // toggle usage tracking
         if ($settings['allow_usage_tracking'] !== $current['allow_usage_tracking']) {
-            MT4WP_Usage_Tracking::instance()->toggle($settings['allow_usage_tracking']);
+            MT4_ACCOUNTS_Usage_Tracking::instance()->toggle($settings['allow_usage_tracking']);
         }
 
         // Make sure not to use obfuscated key
@@ -225,7 +221,7 @@ class MT4WP_Admin
         * @param array $settings The updated settings array
         * @param array $current The old settings array
         */
-        do_action('mt4wp_save_settings', $settings, $current);
+        do_action('mt4accounts_save_settings', $settings, $current);
 
         return $settings;
     }
@@ -240,26 +236,6 @@ class MT4WP_Admin
         return true;
     }
 
-    public function connect_roles_subscriptions()
-    {
-
-        $values = $_POST;
-
-        foreach($values as $key => $value) {
-            if(strpos( $key, 'emailrole_' ) !== FALSE) {
-                update_option('mt4wp_'.$key, $value);
-                $id = str_replace( 'emailrole_', '', $key );
-                update_option('mt4wp_emailsubscription_'.$value, $id);
-            }
-            if(strpos( $key, 'copierrole_' ) !== FALSE) {
-                update_option('mt4wp_'.$key, $value);
-                $id = str_replace( 'copierrole_', '', $key );
-                update_option('mt4wp_copiersubscription_'.$value, $id);
-            }
-        }
-    }
-
-
     /**
     * Register the setting pages and their menu items
     */
@@ -269,20 +245,20 @@ class MT4WP_Admin
 
         $menu_items = array(
             array(
-                'title' => __('API Settings', 'mt4subscriptions-for-wp'),
-                'text' => __('Subscriptions', 'mt4subscriptions-for-wp'),
+                'title' => __('MT4 Accounts Settings', 'mt4accounts-for-wp'),
+                'text' => __('MT4 Accounts', 'mt4accounts-for-wp'),
                 'slug' => '',
                 'callback' => array( $this, 'show_generals_setting_page' ),
                 'position' => 0
             ),
             array(
-                'title' => __('Other Settings', 'mt4subscriptions-for-wp'),
-                'text' => __('Other', 'mt4subscriptions-for-wp'),
+                'title' => __('Other Settings', 'mt4accounts-for-wp'),
+                'text' => __('Other', 'mt4accounts-for-wp'),
                 'slug' => 'other',
                 'callback' => array( $this, 'show_other_setting_page' ),
                 'position' => 90
             ),
-            
+
         );
 
         /**
@@ -301,10 +277,10 @@ class MT4WP_Admin
         * @param array $menu_items
         * @since 3.0
         */
-        $menu_items = (array) apply_filters('mt4wp_admin_menu_items', $menu_items);
+        $menu_items = (array) apply_filters('mt4accounts_admin_menu_items', $menu_items);
 
         // add top menu item
-        add_menu_page('MT4Subscriptions for WP', 'MT4WP', $required_cap, 'mt4subscriptions-for-wp', array( $this, 'show_generals_setting_page' ), MT4WP_PLUGIN_URL . 'assets/img/icon.png', '99.68491');
+        add_menu_page('MT4Accounts for WP', 'MT4ACCOUNTS', $required_cap, 'mt4accounts-for-wp', array( $this, 'show_generals_setting_page' ), MT4_ACCOUNTS_PLUGIN_URL . 'assets/img/icon.png', '99.68491');
 
         // sort submenu items by 'position'
         usort($menu_items, array( $this, 'sort_menu_items_by_position' ));
@@ -322,17 +298,17 @@ class MT4WP_Admin
     {
 
         // generate menu slug
-        $slug = 'mt4subscriptions-for-wp';
+        $slug = 'mt4accounts-for-wp';
         if (! empty($item['slug'])) {
             $slug .= '-' . $item['slug'];
         }
 
         // provide some defaults
-        $parent_slug = ! empty($item['parent_slug']) ? $item['parent_slug'] : 'mt4subscriptions-for-wp';
+        $parent_slug = ! empty($item['parent_slug']) ? $item['parent_slug'] : 'mt4accounts-for-wp';
         $capability = ! empty($item['capability']) ? $item['capability'] : $this->tools->get_required_capability();
 
         // register page
-        $hook = add_submenu_page($parent_slug, $item['title'] . ' - MT4Subscriptions for WordPress', $item['text'], $capability, $slug, $item['callback']);
+        $hook = add_submenu_page($parent_slug, $item['title'] . ' - MT4Accounts for WordPress', $item['text'], $capability, $slug, $item['callback']);
 
         // register callback for loading this page, if given
         if (array_key_exists('load_callback', $item)) {
@@ -345,54 +321,28 @@ class MT4WP_Admin
     */
     public function show_generals_setting_page()
     {
-        $opts = mt4wp_get_options();
-        $api_key = mt4wp_get_api_key();
+        $opts = mt4accounts_get_options();
+        $trusted = false;
 
-        $connected = ! empty($api_key);
-        if ($connected) {
-            try {
-                $connected = $this->get_api()->is_connected();
-            } catch (MT4WP_API_Connection_Exception $e) {
-                $message = sprintf("<strong>%s</strong> %s %s ", __("Error connecting to API:", 'mt4subscriptions-for-wp'), $e->getCode(), $e->getMessage());
+        try {
+            $trusted = $this->get_api()->check_trusted();
+        } catch (MT4_Accounts_Api_Connection_Exception $e) {
+            $message = sprintf("<strong>%s</strong> %s %s ", __("Error connecting to API:", 'mt4accounts-for-wp'), $e->getCode(), $e->getMessage());
 
-                if (is_object($e->data) && ! empty($e->data->ref_no)) {
-                    $message .= '<br />' . sprintf(__('Looks like your server is blocked by API\'s firewall. Please contact Mailchimp support and include the following reference number: %s', 'mt4subscriptions-for-wp'), $e->data->ref_no);
-                }
-
-                $this->messages->flash($message, 'error');
-                $connected = false;
-            } catch (MT4WP_API_Exception $e) {
-                $this->messages->flash(sprintf("<strong>%s</strong><br /> %s", __("API returned the following error:", 'mt4subscriptions-for-wp'), $e), 'error');
-                $connected = false;
+            if (is_object($e->data) && ! empty($e->data->ref_no)) {
+                $message .= '<br />' . sprintf(__('Looks like your server is blocked by API\'s firewall. Please contact Mailchimp support and include the following reference number: %s', 'mt4accounts-for-wp'), $e->data->ref_no);
             }
+
+            $this->messages->flash($message, 'error');
+        } catch (MT4_Accounts_Api_Exception $e) {
+            $this->messages->flash(sprintf("<strong>%s</strong><br /> %s", __("API returned the following error:", 'mt4accounts-for-wp'), $e), 'error');
         }
 
-        $items = array();
-        if($connected) {
-            global $wp_roles;
-            $roles_t = $wp_roles->roles;
-
-            $email_items = $this->get_api()->list_emailsubscriptions();
-            $copier_items = $this->get_api()->list_copiersubscriptions();
-
-            foreach($roles_t as $role => $details) {
-                $o = new stdClass;
-                $o->role = $role;
-                $o->name = $details['name'];
-                $roles[] = $o;
-            }
-
-            foreach($email_items as $item) {
-                $item->role = get_option('mt4wp_emailrole_'.$item->id);
-            }
-
-            foreach($copier_items as $item) {
-                $item->role = get_option('mt4wp_copierrole_'.$item->id);
-            }
+        $accounts = array();
+        if($trusted) {
+            $accounts = $this->get_api()->list_accounts();
         }
-
-        $obfuscated_api_key = mt4wp_obfuscate_string($api_key);
-        require MT4WP_PLUGIN_DIR . 'includes/views/general-settings.php';
+        require MT4_ACCOUNTS_PLUGIN_DIR . 'includes/views/general-settings.php';
     }
 
     /**
@@ -400,10 +350,10 @@ class MT4WP_Admin
     */
     public function show_other_setting_page()
     {
-        $opts = mt4wp_get_options();
+        $opts = mt4accounts_get_options();
         $log = $this->get_log();
-        $log_reader = new MT4WP_Debug_Log_Reader($log->file);
-        require MT4WP_PLUGIN_DIR . 'includes/views/other-settings.php';
+        $log_reader = new MT4_Accounts_Debug_Log_Reader($log->file);
+        require MT4_ACCOUNTS_PLUGIN_DIR . 'includes/views/other-settings.php';
     }
 
     /**
@@ -427,63 +377,22 @@ class MT4WP_Admin
         $log = $this->get_log();
         file_put_contents($log->file, '');
 
-        $this->messages->flash(__('Log successfully emptied.', 'mt4subscriptions-for-wp'));
+        $this->messages->flash(__('Log successfully emptied.', 'mt4accounts-for-wp'));
     }
 
     /**
-    * Shows a notice when API key is not set.
-    */
-    public function show_api_key_notice()
-    {
-
-        // don't show if on settings page already
-        if ($this->tools->on_plugin_page('')) {
-            return;
-        }
-
-        // only show to user with proper permissions
-        if (! $this->tools->is_user_authorized()) {
-            return;
-        }
-
-        // don't show if dismissed
-        if (get_transient('mt4wp_api_key_notice_dismissed')) {
-            return;
-        }
-
-        // don't show if api key is set already
-        $api_key = mt4wp_get_api_key();
-        if (! empty($api_key)) {
-            return;
-        }
-
-        echo '<div class="notice notice-warning mt4wp-is-dismissible">';
-        echo '<p>' . sprintf(__('To get started with MT4Subscriptions for WordPress, please <a href="%s">enter your API key on the settings page of the plugin</a>.', 'mt4subscriptions-for-wp'), admin_url('admin.php?page=mt4subscriptions-for-wp')) . '</p>';
-        echo '<form method="post"><input type="hidden" name="_mt4wp_action" value="dismiss_api_key_notice" /><button type="submit" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></form>';
-        echo '</div>';
-    }
-
-    /**
-    * Dismisses the API key notice for 1 week
-    */
-    public function dismiss_api_key_notice()
-    {
-        set_transient('mt4wp_api_key_notice_dismissed', 1, 3600 * 24 * 7);
-    }
-
-    /**
-    * @return MT4WP_Debug_Log
+    * @return MT4_Accounts_Debug_Log
     */
     protected function get_log()
     {
-        return mt4wp('log');
+        return mt4accounts('log');
     }
 
     /**
-    * @return MT4WP_API_v3
+    * @return MT4_Accounts_Api
     */
     protected function get_api()
     {
-        return mt4wp('api');
+        return mt4accounts('api');
     }
 }
