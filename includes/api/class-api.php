@@ -63,6 +63,21 @@ class MT4_Accounts_Api
     /**
      * @return array
      */
+    public function get_instruments($accountNumber)
+    {
+        $resource = sprintf('/widgets/instruments/%d', $accountNumber);
+        $data = $this->client->get($resource);
+
+        if (is_object($data) && isset($data->items)) {
+            return $data->items;
+        }
+
+        return array();
+    }
+
+    /**
+     * @return array
+     */
     public function list_accounts()
     {
         $resource = sprintf('/widgets/list_accounts');
