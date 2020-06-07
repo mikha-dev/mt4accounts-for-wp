@@ -1,7 +1,7 @@
 <?php
 
 /**
-* Class MT4_ACCOUNTS_Admin
+* Class MT4_Accounts_Admin
 *
 * @ignore
 * @access private

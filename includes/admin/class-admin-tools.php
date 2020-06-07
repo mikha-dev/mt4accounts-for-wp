@@ -1,6 +1,6 @@
 <?php
 
-class MT4WP_Admin_Tools
+class MT4_Accounts_Admin_Tools
 {
 
      /**
@@ -12,7 +12,7 @@ class MT4WP_Admin_Tools
             return '';
         }
 
-        $prefix = 'mt4subscriptions-for-wp';
+        $prefix = 'mt4accounts-for-wp';
         $page = ltrim(substr($_GET['page'], strlen($prefix)), '-');
         return $page;
     }
@@ -26,7 +26,7 @@ class MT4WP_Admin_Tools
     {
         // any settings page
         if (is_null($page)) {
-            return isset($_GET['page']) && strpos($_GET['page'], 'mt4subscriptions-for-wp') === 0;
+            return isset($_GET['page']) && strpos($_GET['page'], 'mt4accounts-for-wp') === 0;
         }
 
         // specific page
@@ -58,7 +58,7 @@ class MT4WP_Admin_Tools
          * @ignore
          * @deprecated 3.0
          */
-        $capability = apply_filters('mt4wp_settings_cap', $capability);
+        $capability = apply_filters('mt4accounts_settings_cap', $capability);
 
         /**
          * Filters the required user capability to access the Mailchimp for WordPress' settings pages, view the dashboard widgets.
@@ -69,7 +69,7 @@ class MT4WP_Admin_Tools
          * @param string $capability
          * @see https://codex.wordpress.org/Roles_and_Capabilities
          */
-        $capability = (string) apply_filters('mt4wp_admin_required_capability', $capability);
+        $capability = (string) apply_filters('mt4accounts_admin_required_capability', $capability);
 
         return $capability;
     }

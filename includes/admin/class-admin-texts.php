@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class MT4WP_Admin_Texts
+ * Class MT4_Accounts_Admin_Texts
  *
  * @ignore
  * @since 3.0
  */
-class MT4WP_Admin_Texts
+class MT4_Accounts_Admin_Texts
 {
 
     /**
@@ -46,7 +46,7 @@ class MT4WP_Admin_Texts
             return $links;
         }
 
-        $settings_link = '<a href="' . admin_url('admin.php?page=mt4subscriptions-for-wp') . '">'. __('Settings', 'mt4subscriptions-for-wp') . '</a>';
+        $settings_link = '<a href="' . admin_url('admin.php?page=mt4accounts-for-wp') . '">'. __('Settings', 'mt4accounts-for-wp') . '</a>';
         array_unshift($links, $settings_link);
         return $links;
     }
@@ -65,7 +65,7 @@ class MT4WP_Admin_Texts
             return $links;
         }
 
-        $links[] = 'http://dev4traders.com';//'<a href="https://kb.mc4wp.com/#utm_source=wp-plugin&utm_medium=mailchimp-for-wp&utm_campaign=plugins-page">'. __('Documentation', 'mailchimp-for-wp') . '</a>';
+        $links[] = 'http://dev4traders.com';
 
         /**
          * Filters meta links shown on the Plugins overview page
@@ -76,7 +76,7 @@ class MT4WP_Admin_Texts
          * @param array $links
          * @ignore
          */
-        $links = (array) apply_filters('mt4wp_admin_plugin_meta_links', $links);
+        $links = (array) apply_filters('mt4accounts_admin_plugin_meta_links', $links);
 
         return $links;
     }

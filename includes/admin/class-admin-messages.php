@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class MT4WP_Admin_Messages
+ * Class MT4_Accounts_Admin_Messages
  *
  * @ignore
  * @since 3.0
  */
-class MT4WP_Admin_Messages
+class MT4_Accounts_Admin_Messages
 {
 
     /**
@@ -31,7 +31,7 @@ class MT4WP_Admin_Messages
     private function load()
     {
         if (is_null($this->bag)) {
-            $this->bag = get_option('mt4wp_flash_messages', array());
+            $this->bag = get_option('mt4accounts_flash_messages', array());
         }
     }
 
@@ -82,7 +82,7 @@ class MT4WP_Admin_Messages
     public function save()
     {
         if ($this->dirty) {
-            update_option('mt4wp_flash_messages', $this->bag, false);
+            update_option('mt4accounts_flash_messages', $this->bag, false);
         }
     }
 }
