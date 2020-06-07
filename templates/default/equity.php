@@ -7,7 +7,7 @@
             zoomType: 'x'
         },
         title: {
-            text: '<?php echo $caption; ?>'
+            text: 'Equity'
         },
         xAxis: {
             type: 'datetime'
@@ -20,9 +20,9 @@
         legend: {
             enabled: false
         },
-        credits: { 
-            enabled: false 
-          },        
+        credits: {
+            enabled: false
+          },
         plotOptions: {
             area: {
                 fillColor: {
