@@ -18,19 +18,27 @@
             myApp.oTable =  jQuery('#orders_history').DataTable( {
               "paging": false,
               "bFilter":     false,
-              "autoWidth": true,
+              responsive: true,
               data: dataHistory,
+              rowReorder: {
+                selector: 'td:nth-child(2)'
+              },
               columns: [
-                { 'title': 'Time' },
+                { 'title': 'Open Date' },
+                { 'title': 'Close Date' },
                 { 'title': 'Symbol' },
                 { 'title': 'Type' },
                 { 'title': 'Lots' },
-                { 'title': 'Price' },
-                { 'title': 'P/L' },
+                { 'title': 'SL' },
+                { 'title': 'TP' },
+                { 'title': 'Open' },
+                { 'title': 'Close' },
+                { 'title': 'Pips' },
+                { 'title': 'Profit' },
               ]
             } );
   } );
 </script>
-<div style="width: 50%">
-  <table id="orders_history" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"></table>
+<div style="width: 90%">
+  <table id="orders_history" class="display nowrap"></table>
 </div>

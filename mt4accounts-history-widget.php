@@ -74,11 +74,16 @@ class MT4_History_Plugin{
     foreach($items as $item) {
       $t = array();
 
+      $t[] = '"'.$item->time_open.'"';
       $t[] = '"'.$item->time_close.'"';
       $t[] = '"'.$item->symbol.'"';
       $t[] = '"'.$item->type_str.'"';
       $t[] = '"'.$item->lots.'"';
+      $t[] = '"'.$item->stoploss.'"';
+      $t[] = '"'.$item->takeprofit.'"';
       $t[] = '"'.$item->price.'"';
+      $t[] = '"'.$item->price_close.'"';
+      $t[] = '"'.$item->pips.'"';
       $t[] = '"'.$item->pl.'"';
 
       $data[] = '['. implode(',', $t).']';
@@ -99,6 +104,8 @@ class MT4_History_Plugin{
     wp_register_script( 'datatables-js', "https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js", array('jquery'), null, false);
     wp_enqueue_script( 'datatables-js' );
 
+    wp_register_script( 'datatables-reor', "https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js", array('jquery'), null, false);
+    wp_enqueue_script( 'datatables-reor' );
 
     wp_register_style( 'bs', "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" );
     wp_enqueue_style( 'bs' );
@@ -109,6 +116,10 @@ class MT4_History_Plugin{
     wp_register_style( 'datatables-bs', "https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css" );
     wp_enqueue_style( 'datatables-bs' );
 
+
+
+    wp_register_style( 'datatables-resp', "https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js" );
+    wp_enqueue_style( 'datatables-rest' );
 
   }
 
