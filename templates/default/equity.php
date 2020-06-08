@@ -3,19 +3,17 @@
   jQuery(document).ready(function() {
 
     Highcharts.chart('equity_<?php echo $account_number; ?>', {
-        chart: {
-            zoomType: 'x'
-        },
         title: {
             text: 'Equity'
         },
         xAxis: {
-            type: 'datetime'
+            type: 'datetime',
+            ordinal: true
         },
         yAxis: {
             title: {
                 text: null
-            }
+            },
         },
         legend: {
             enabled: false

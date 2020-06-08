@@ -87,7 +87,7 @@ class MT4_Equity_Plugin {
 
   function enqueue_scripts()  {
 
-    wp_register_script( 'highcharts-js', "https://code.highcharts.com/highcharts.js", array('jquery'), null, false);
+    wp_register_script( 'highcharts-js', "https://code.highcharts.com/stock/highstock.js", array('jquery'), null, false);
     wp_enqueue_script( 'highcharts-js' );
   }
 
