@@ -2,11 +2,13 @@
 #orders_history td {
   white-space:nowrap;
   padding: 2px 10px;
+  font-size: 13px;
 }
 
 #orders_history thead th {
   white-space:nowrap;
-  padding: 2px 10px;
+  padding: 2px 8px;
+  font-size: 13px;
 }
 </style>
 <script type="text/javascript">
@@ -15,8 +17,8 @@
             jQuery(document).ready(function() {
             myApp.oTable =  jQuery('#orders_history').DataTable( {
               "paging": false,
-              "ordering": false,
               "bFilter":     false,
+              "autoWidth": true,
               data: dataHistory,
               columns: [
                 { 'title': 'Time' },
@@ -29,6 +31,6 @@
             } );
   } );
 </script>
-<div class="grid-orders_online">
-  <table id="orders_history" class="display" cellspacing="0"></table>
+<div style="width: 50%">
+  <table id="orders_history" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"></table>
 </div>

@@ -95,11 +95,21 @@ class MT4_History_Plugin{
 
   function wp_enqueue_scripts()  {
 
+
     wp_register_script( 'datatables-js', "https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js", array('jquery'), null, false);
     wp_enqueue_script( 'datatables-js' );
 
+
+    wp_register_style( 'bs', "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" );
+    wp_enqueue_style( 'bs' );
+
     wp_register_style( 'datatables-css', "https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" );
     wp_enqueue_style( 'datatables-css' );
+
+    wp_register_style( 'datatables-bs', "https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css" );
+    wp_enqueue_style( 'datatables-bs' );
+
+
   }
 
   function shortcode_format( $content ) {
