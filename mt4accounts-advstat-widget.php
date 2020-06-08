@@ -11,7 +11,7 @@ class MT4_Advstat_Plugin{
 
 //    add_action( "wp_enqueue_scripts", array( &$this, 'mt4_equity_enqueue_scripts' ) );
 
-    add_shortcode( "mt4_advstat", array( &$this, 'shortcode_mt4_equity' ) );
+    add_shortcode( "mt4_advstat", array( &$this, 'format_shortcode' ) );
   }
 
   function template_redirect() {
