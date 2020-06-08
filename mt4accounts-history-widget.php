@@ -69,8 +69,22 @@ class MT4_History_Plugin{
     ob_start();
 //    $url_ajax = "/wp-content/plugins/mt4accounts-for-wp/mt4accounts-api.php?account=$account_number";
     $items = mt4accounts_get_api()->get_history($account_number);
-    $items = json_encode($items);
 
+    $data = array();
+    foreach($items as $item) {
+      $t = array();
+
+      $t[] = '"'.$item->time_close.'"';
+      $t[] = '"'.$item->symbol.'"';
+      $t[] = '"'.$item->type_str.'"';
+      $t[] = '"'.$item->lots.'"';
+      $t[] = '"'.$item->price.'"';
+      $t[] = '"'.$item->pl.'"';
+
+      $data[] = '['. implode(',', $t).']';
+    }
+
+    $items = '['. implode(',', $data). '];';
     include_once( dirname( __FILE__ ) . "/templates/{$template}/history.php");
 
     $data = ob_get_contents();
@@ -84,7 +98,7 @@ class MT4_History_Plugin{
     wp_register_script( 'datatables-js', "https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js", array('jquery'), null, false);
     wp_enqueue_script( 'datatables-js' );
 
-    wp_register_style( 'datatables-css', "https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css", array('jquery'), null, false);
+    wp_register_style( 'datatables-css', "https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" );
     wp_enqueue_style( 'datatables-css' );
   }
 
