@@ -67,7 +67,7 @@
 }
 </style>
 
-<div style="display: inline-flex;">
+<div style="display: flex; margin-left: auto; margin-left: auto; margin-right: auto;">
 <div style="width:50%">
     <table class="advanced border0L">
         <tr class="bg1">
