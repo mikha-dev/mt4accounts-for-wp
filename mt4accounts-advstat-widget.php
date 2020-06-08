@@ -3,20 +3,17 @@ $MT4_Advstat_Plugin = new MT4_Advstat_Plugin();
 
 class MT4_Advstat_Plugin{
 
-  private $tag = 'mt4_advstat';
   private $output;
 
   function __construct(){
 
     add_action( "template_redirect", array( &$this, 'template_redirect' ) );
-    //add_action( "wp_enqueue_scripts", array( &$this, 'wp_enqueue_scripts' ) );
-    add_shortcode( $this->tag, array( &$this, 'format_shortcode' ) );
+
+//    add_action( "wp_enqueue_scripts", array( &$this, 'mt4_equity_enqueue_scripts' ) );
+
+    add_shortcode( "mt4_advstat", array( &$this, 'shortcode_mt4_equity' ) );
   }
 
-  /**
-   * This is the custom action, placed in header at your theme before any html-output!
-   * To be continued: hooks and filters to perform different grids on different tables and datasources.
-   */
   function template_redirect() {
     global $post;
 
@@ -24,21 +21,17 @@ class MT4_Advstat_Plugin{
 
     preg_match_all('/'.$regex_pattern.'/s', $post->post_content, $regex_matches);
 
-    if(count($regex_matches) < 4) {
+    if(count($regex_matches) < 4 ) {
       return;
     }
 
     $i = 0;
     foreach($regex_matches[2] as $m) {
-      if ($m == $this->tag) {
-        $attribute_str = str_replace (" ", "&", trim ($regex_matches[3][$i]));
+      if ($m == 'mt4_equity') {
+        $attribureStr = str_replace (" ", "&", trim ($regex_matches[3][$i]));
+        $attribureStr = str_replace ('"', '', $attribureStr);
 
-        $attribute_str = str_replace ('"', '', $attribute_str);
-
-        $defaults = array ();
-        $attributes = wp_parse_args($attribute_str, $defaults);
-
-        $this->output = $this->format_output($attributes);
+        $this->output = $this->format_output($attribureStr);
       }
 
       $i++;
@@ -47,12 +40,13 @@ class MT4_Advstat_Plugin{
   }
 
   function format_output($attributes) {
-    global $mt4_accounts;
+    $account_number = '';
 
     if (isset($attributes['account_number'])){
       $account_number = $attributes['account_number'];
     } else {
-      $account_number = $_REQUEST['acc'];
+      if( isset($_REQUEST['acc']))
+        $account_number = $_REQUEST['acc'];
     }
 
     if(empty($account_number)) {
@@ -64,6 +58,10 @@ class MT4_Advstat_Plugin{
     else
       $template = 'default';
 
+    if (isset($attributes['caption'])){
+      $caption = $attributes['caption'];
+    } else
+      $caption = '';
     ob_start();
 
     $account = mt4accounts_get_api()->get_advstat($account_number);

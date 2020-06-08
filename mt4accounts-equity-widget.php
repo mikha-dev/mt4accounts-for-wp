@@ -7,14 +7,14 @@ class MT4_Equity_Plugin {
 
   function __construct(){
 
-    add_action( "template_redirect", array( &$this, 'mt4_equity_header' ) );
+    add_action( "template_redirect", array( &$this, 'template_redirect' ) );
 
-    add_action( "wp_enqueue_scripts", array( &$this, 'mt4_equity_enqueue_scripts' ) );
+    add_action( "wp_enqueue_scripts", array( &$this, 'enqueue_scripts' ) );
 
-    add_shortcode( "mt4_equity", array( &$this, 'shortcode_mt4_equity' ) );
+    add_shortcode( "mt4_equity", array( &$this, 'format_shortcode' ) );
   }
 
-  function mt4_equity_header() {
+  function template_redirect() {
     global $post;
 
     $regex_pattern = get_shortcode_regex();
@@ -31,7 +31,7 @@ class MT4_Equity_Plugin {
         $attribureStr = str_replace (" ", "&", trim ($regex_matches[3][$i]));
         $attribureStr = str_replace ('"', '', $attribureStr);
 
-        $this->output = $this->format_equity_output($attribureStr);
+        $this->output = $this->format_output($attribureStr);
       }
 
       $i++;
@@ -39,8 +39,7 @@ class MT4_Equity_Plugin {
 
   }
 
-  function format_equity_output($attributes) {
-    global $mt4accounts;
+  function format_output($attributes) {
 
     $account_number = '';
 
@@ -78,17 +77,18 @@ class MT4_Equity_Plugin {
 
   }
 
-  function mt4_equity_enqueue_scripts()  {
+
+  function format_shortcode( $content ) {
+   if(empty($this->output))
+      $this->output = $this->format_output($content);
+
+    return $this->output;
+  }
+
+  function enqueue_scripts()  {
 
     wp_register_script( 'highcharts-js', "https://code.highcharts.com/highcharts.js", array('jquery'), null, false);
     wp_enqueue_script( 'highcharts-js' );
-  }
-
-  function shortcode_mt4_equity( $content ) {
-   if(empty($this->output))
-      $this->output = $this->format_equity_output($content);
-
-    return $this->output;
   }
 
 }
