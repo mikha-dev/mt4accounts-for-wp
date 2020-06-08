@@ -78,6 +78,21 @@ class MT4_Accounts_Api
     /**
      * @return array
      */
+    public function get_advstat($accountNumber)
+    {
+        $resource = sprintf('/widgets/advstat/%d', $accountNumber);
+        $data = $this->client->get($resource);
+
+        if (is_object($data) && isset($data->item)) {
+            return $data->item;
+        }
+
+        return array();
+    }
+
+    /**
+     * @return array
+     */
     public function list_accounts()
     {
         $resource = sprintf('/widgets/list_accounts');

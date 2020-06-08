@@ -11,3 +11,4 @@ Author URI: http://dev4traders.com/
 
 include_once( dirname( __FILE__ ) . '/mt4accounts-equity-widget.php' );
 include_once( dirname( __FILE__ ) . '/mt4accounts-instrument-widget.php' );
+include_once( dirname( __FILE__ ) . '/mt4accounts-stat-widget.php' );
