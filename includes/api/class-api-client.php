@@ -98,7 +98,7 @@ class MT4_Accounts_Api_Client
           'method' => $method,
           'headers' => $this->get_headers(),
           'timeout' => 10,
-          'sslverify' => apply_filters('mt4accounts_use_sslverify', true),
+          'sslverify' => apply_filters('mt4accounts_use_sslverify', false),
         );
 
         if (! empty($data)) {
