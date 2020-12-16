@@ -45,12 +45,21 @@ class MT4_Accounts_Api
         return $success;
     }
 
-    /**
-     * @return array
-     */
     public function get_equity($accountNumber)
     {
         $resource = sprintf('/widgets/equity/%d', $accountNumber);
+        $data = $this->client->get($resource);
+
+        if (is_object($data) && isset($data->items)) {
+            return $data->items;
+        }
+
+        return array();
+    }
+
+    public function get_portfolio_equity($portfolio_id)
+    {
+        $resource = sprintf('/widgets/portfolio/equity/%d', $portfolio_id);
         $data = $this->client->get($resource);
 
         if (is_object($data) && isset($data->items)) {
@@ -75,12 +84,36 @@ class MT4_Accounts_Api
         return array();
     }
 
+    public function get_portfolio_instruments($portfolio_id)
+    {
+        $resource = sprintf('/widgets/portfolio/instruments/%d', $portfolio_id);
+        $data = $this->client->get($resource);
+
+        if (is_object($data) && isset($data->items)) {
+            return $data->items;
+        }
+
+        return array();
+    }
+
     /**
      * @return array
      */
     public function get_advstat($accountNumber)
     {
         $resource = sprintf('/widgets/advstat/%d', $accountNumber);
+        $data = $this->client->get($resource);
+
+        if (is_object($data) && isset($data->item)) {
+            return $data->item;
+        }
+
+        return array();
+    }
+
+    public function get_portfolio_advstat($portfolio_id)
+    {
+        $resource = sprintf('/widgets/portfolio/advstat/%d', $portfolio_id);
         $data = $this->client->get($resource);
 
         if (is_object($data) && isset($data->item)) {
@@ -105,12 +138,36 @@ class MT4_Accounts_Api
         return array();
     }
 
+    public function get_portfolio_history($portfolio_id)
+    {
+        $resource = sprintf('/widgets/portfolio/history/%d', $portfolio_id);
+        $data = $this->client->get($resource);
+
+        if (is_object($data) && isset($data->items)) {
+            return $data->items;
+        }
+
+        return array();
+    }
+
     /**
      * @return array
      */
     public function list_accounts()
     {
         $resource = sprintf('/widgets/list_accounts');
+        $data = $this->client->get($resource);
+
+        if (is_object($data) && isset($data->items)) {
+            return $data->items;
+        }
+
+        return array();
+    }
+
+    public function list_portfolios()
+    {
+        $resource = sprintf('/widgets/portfolios');
         $data = $this->client->get($resource);
 
         if (is_object($data) && isset($data->items)) {
