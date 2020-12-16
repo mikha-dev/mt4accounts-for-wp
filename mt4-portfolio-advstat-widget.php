@@ -1,7 +1,7 @@
 <?php
-$MT4_Advstat_Plugin = new MT4_Advstat_Plugin();
+$MT4_PortfolioAdvstat_Plugin = new MT4_PortfolioAdvstat_Plugin();
 
-class MT4_Advstat_Plugin{
+class MT4_PortfolioAdvstat_Plugin{
 
   private $output;
 
