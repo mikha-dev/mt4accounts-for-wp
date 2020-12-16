@@ -2,8 +2,8 @@
 </style>
 <script type="text/javascript">
   jQuery(document).ready(function() {
-    
-      Highcharts.chart('instrument_<?php echo $account_number; ?>', {
+
+      Highcharts.chart('instrument_<?php echo $id; ?>', {
           chart: {
               plotBackgroundColor: null,
               plotBorderWidth: null,
@@ -13,8 +13,8 @@
           title: {
               text: 'Distribution of Instruments'
           },
-          credits: { 
-            enabled: false 
+          credits: {
+            enabled: false
           },
           tooltip: {
               pointFormat: '<b>{point.percentage:.2f}%</b>'
@@ -43,5 +43,5 @@
       });
   });
 </script>
-<div id="instrument_<?php echo $account_number; ?>">
+<div id="instrument_<?php echo $id; ?>">
 </div>

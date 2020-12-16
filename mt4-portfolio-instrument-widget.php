@@ -45,15 +45,15 @@ class MT4_PortfolioInstrument_Plugin {
   }
 
   function _output($attributes) {
-
-    if (isset($attributes['portfolio-id'])){
-      $portfolio_id = $attributes['portfolio-id'];
+    $id = '';
+    if (isset($attributes['id'])){
+      $id = $attributes['id'];
     } else {
-      if(isset($_REQUEST['portfolio-id']))
-        $portfolio_id = $_REQUEST['portfolio-id'];
+      if(isset($_REQUEST['id']))
+        $id = $_REQUEST['id'];
     }
 
-    if(empty($portfolio_id)) {
+    if(empty($id)) {
       return false;
     }
 
@@ -68,7 +68,7 @@ class MT4_PortfolioInstrument_Plugin {
       $caption = '';
 
     ob_start();
-    $items = mt4accounts_get_api()->get_portfolio_instruments($portfolio_id);
+    $items = mt4accounts_get_api()->get_portfolio_instruments($id);
     include_once( dirname( __FILE__ ) . "/templates/{$template}/instrument.php");
 
     $data = ob_get_contents();

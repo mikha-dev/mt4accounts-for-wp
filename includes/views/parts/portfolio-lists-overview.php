@@ -13,6 +13,7 @@
         $headings = array(
             __('ID', 'mt4accounts-for-wp'),
             __('Title', 'mt4accounts-for-wp'),
+            __('Shosrtcodes', 'mt4accounts-for-wp'),
         );
 
         echo '<thead>';
@@ -27,6 +28,7 @@
             echo '<tr>';
             echo sprintf('<td>%s</td>', esc_html($portfolio->id));
             echo sprintf('<td>%s</td>', esc_html($portfolio->title));
+            echo "<td>[mt4_portfolio_equity id=\"{$portfolio->id}\"] [mt4_portfolio_instruments id=\"$portfolio->id\"] [mt4_portfolio_history id=\"$portfolio->id\"]</td>";
             echo '</tr>';
         }
         echo '</table>';

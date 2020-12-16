@@ -2,7 +2,7 @@
 
   jQuery(document).ready(function() {
 
-    Highcharts.chart('equity_<?php echo $account_number; ?>', {
+    Highcharts.chart('equity_<?php echo $id; ?>', {
         title: {
             text: 'Equity'
         },
@@ -60,5 +60,5 @@
     });
 });
 </script>
-<div id="equity_<?php echo $account_number; ?>">
+<div id="equity_<?php echo $id; ?>">
 </div>

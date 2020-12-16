@@ -338,9 +338,9 @@ class MT4_Accounts_Admin
             $this->messages->flash(sprintf("<strong>%s</strong><br /> %s", __("API returned the following error:", 'mt4accounts-for-wp'), $e), 'error');
         }
 
-        $accounts = array();
+        $portfolios = array();
         if($trusted) {
-            $accounts = $this->get_api()->list_accounts();
+            $portfolios = $this->get_api()->list_portfolios();
         }
         require MT4_ACCOUNTS_PLUGIN_DIR . 'includes/views/general-settings.php';
     }

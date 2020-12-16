@@ -41,16 +41,16 @@ class MT4_PortfolioEquity_Plugin {
 
   function format_output($attributes) {
 
-    $portfolio_id = '';
+    $id = '';
 
-    if (isset($attributes['portfolio-id'])){
-      $portfolio_id = $attributes['portfolio-id'];
+    if (isset($attributes['id'])){
+      $id = $attributes['id'];
     } else {
-      if( isset($_REQUEST['portfolio-id']))
-        $portfolio_id = $_REQUEST['portfolio-id'];
+      if( isset($_REQUEST['id']))
+        $id = $_REQUEST['id'];
     }
 
-    if(empty($portfolio_id)) {
+    if(empty($id)) {
       return false;
     }
 
@@ -66,7 +66,7 @@ class MT4_PortfolioEquity_Plugin {
 
     ob_start();
 
-    $items = mt4accounts_get_api()->get_portfolio_equity($portfolio_id);
+    $items = mt4accounts_get_api()->get_portfolio_equity($id);
 
     include_once( dirname( __FILE__ ) . "/templates/{$template}/equity.php");
 
