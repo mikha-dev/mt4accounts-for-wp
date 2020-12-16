@@ -46,14 +46,15 @@ class MT4_PortfolioHistory_Plugin{
 
   function format_output($attributes) {
 
-    if (isset($attributes['portfolio-id'])){
-      $portfolio_id = $attributes['portfolio-id'];
+    $id = '';
+    if (isset($attributes['id'])){
+      $id = $attributes['id'];
     } else {
-      if(isset($_REQUEST['portfolio-id']))
-      $portfolio_id = $_REQUEST['portfolio-id'];
+      if(isset($_REQUEST['id']))
+      $id = $_REQUEST['id'];
     }
 
-    if(empty($portfolio_id)) {
+    if(empty($id)) {
       return false;
     }
 
@@ -69,7 +70,7 @@ class MT4_PortfolioHistory_Plugin{
 
     ob_start();
 //    $url_ajax = "/wp-content/plugins/mt4accounts-for-wp/mt4accounts-api.php?account=$account_number";
-    $items = mt4accounts_get_api()->get_portfolio_history($portfolio_id);
+    $items = mt4accounts_get_api()->get_portfolio_history($id);
 
     $data = array();
     foreach($items as $item) {
