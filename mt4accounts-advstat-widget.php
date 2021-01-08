@@ -62,6 +62,17 @@ class MT4_Advstat_Plugin{
       $caption = $attributes['caption'];
     } else
       $caption = '';
+
+      $equity = '';
+      if (isset($attributes['equity'])){
+        $equity = $attributes['equity'];
+      }
+
+      $balance = '';
+      if (isset($attributes['balance'])){
+        $balance = $attributes['balance'];
+      }
+
     ob_start();
 
     $account = mt4accounts_get_api()->get_advstat($account_number);

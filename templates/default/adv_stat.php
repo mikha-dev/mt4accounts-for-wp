@@ -88,11 +88,11 @@
         </tr>
         <tr>
             <td>Balance ($):</td>
-            <td class="alignR"><?php echo $account->balance; ?></td>
+            <td class="alignR"><?php if(!empty($GLOBALS)) echo $balance; else echo $account->balance; ?></td>
         </tr>
         <tr class="bg1">
             <td>Equity ($):</td>
-            <td class="alignR"><?php echo $account->equity; ?></td>
+            <td class="alignR"><?php if(!empty($equity)) echo $equity; else echo $account->equity; ?></td>
         </tr>
         <tr>
             <td>Profit ($):</td>
