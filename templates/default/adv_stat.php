@@ -145,11 +145,11 @@
         </tr>
         <tr class="bg1">
             <td>Longs Won:</td>
-            <td class="alignR"><span class="gray">(<?php echo $account->longs_won.'/'.$account->total_longs; ?>)</span> <?php echo number_format( $account->longs_won/$account->total_longs*100, 2 ); ?>%</td>
+            <td class="alignR"><span class="gray">(<?php if($account->total_longs == 0) echo '0'; else echo $account->longs_won.'/'.$account->total_longs; ?>)</span> <?php if($account->total_longs==0) echo '0'; else echo number_format( $account->longs_won/$account->total_longs*100, 2 ); ?>%</td>
         </tr>
         <tr>
             <td>Shorts Won:</td>
-            <td class="alignR"><span class="gray">(<?php echo $account->shorts_won.'/'.$account->total_shorts; ?>)</span> <?php echo number_format( $account->shorts_won/$account->total_shorts*100, 2 ); ?>%</td>
+            <td class="alignR"><span class="gray">(<?php if($account->total_shorts ==0) echo '0'; else echo $account->shorts_won.'/'.$account->total_shorts; ?>)</span> <?php echo number_format( $account->shorts_won/$account->total_shorts*100, 2 ); ?>%</td>
         </tr>
         <tr class="bg1">
             <td>Best Trade($):</td>
