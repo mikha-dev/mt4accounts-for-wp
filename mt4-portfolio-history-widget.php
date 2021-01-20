@@ -63,14 +63,19 @@ class MT4_PortfolioHistory_Plugin{
     else
       $template = 'default';
 
+    $caption = '';
     if (isset($attributes['caption'])){
       $caption = $attributes['caption'];
     } else
       $caption = '';
 
+    $limit = 10;
+    if (isset($attributes['limit'])){
+      $limit = $attributes['limit'];
+    }
     ob_start();
 //    $url_ajax = "/wp-content/plugins/mt4accounts-for-wp/mt4accounts-api.php?account=$account_number";
-    $items = mt4accounts_get_api()->get_portfolio_history($id);
+    $items = mt4accounts_get_api()->get_portfolio_history($id, $limit);
 
     $data = array();
     foreach($items as $item) {

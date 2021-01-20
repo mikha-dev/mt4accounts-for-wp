@@ -138,9 +138,9 @@ class MT4_Accounts_Api
         return array();
     }
 
-    public function get_portfolio_history($portfolio_id)
+    public function get_portfolio_history($portfolio_id, $limit)
     {
-        $resource = sprintf('/widgets/portfolio/history/%d', $portfolio_id);
+        $resource = sprintf('/widgets/portfolio/history/%d/%d', $portfolio_id, $limit);
         $data = $this->client->get($resource);
 
         if (is_object($data) && isset($data->items)) {

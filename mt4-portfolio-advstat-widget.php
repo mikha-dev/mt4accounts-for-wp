@@ -40,16 +40,16 @@ class MT4_PortfolioAdvstat_Plugin{
   }
 
   function format_output($attributes) {
-    $account_number = '';
 
-    if (isset($attributes['account_number'])){
-      $account_number = $attributes['account_number'];
+    $id = '';
+    if (isset($attributes['id'])){
+      $id = $attributes['id'];
     } else {
-      if( isset($_REQUEST['acc']))
-        $account_number = $_REQUEST['acc'];
+      if( isset($_REQUEST['id']))
+        $id = $_REQUEST['id'];
     }
 
-    if(empty($account_number)) {
+    if(empty($id)) {
       return false;
     }
 
@@ -62,9 +62,20 @@ class MT4_PortfolioAdvstat_Plugin{
       $caption = $attributes['caption'];
     } else
       $caption = '';
+
+      $equity = '';
+      if (isset($attributes['equity'])){
+        $equity = $attributes['equity'];
+      }
+
+      $balance = '';
+      if (isset($attributes['balance'])){
+        $balance = $attributes['balance'];
+      }
+
     ob_start();
 
-    $account = mt4accounts_get_api()->get_advstat($account_number);
+    $account = mt4accounts_get_api()->get_portfolio_advstat($id);
     include_once( dirname( __FILE__ ) . "/templates/{$template}/adv_stat.php");
 
     $data = ob_get_contents();
