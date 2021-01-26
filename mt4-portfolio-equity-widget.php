@@ -54,11 +54,6 @@ class MT4_PortfolioEquity_Plugin {
       return false;
     }
 
-   if(isset($attributes['template']))
-      $template = $attributes['template']?$attributes['template']:'default';
-    else
-      $template = 'default';
-
     if (isset($attributes['caption'])){
       $caption = $attributes['caption'];
     } else
@@ -68,7 +63,7 @@ class MT4_PortfolioEquity_Plugin {
 
     $items = mt4accounts_get_api()->get_portfolio_equity($id);
 
-    include_once( dirname( __FILE__ ) . "/templates/{$template}/equity.php");
+    include_once( dirname( __FILE__ ) . "/templates/portfolio/equity.php");
 
     $data = ob_get_contents();
     ob_clean();

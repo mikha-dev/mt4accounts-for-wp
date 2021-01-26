@@ -20,9 +20,7 @@
               "bFilter":     false,
               responsive: true,
               data: dataHistory,
-              rowReorder: {
-                selector: 'td:nth-child(2)'
-              },
+              "ordering": false,
               columns: [
                 { 'title': 'Open Date' },
                 { 'title': 'Close Date' },

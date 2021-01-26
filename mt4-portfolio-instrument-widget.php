@@ -57,11 +57,6 @@ class MT4_PortfolioInstrument_Plugin {
       return false;
     }
 
-   if(isset($attributes['template']))
-      $template = $attributes['template']?$attributes['template']:'default';
-    else
-      $template = 'default';
-
     if (isset($attributes['caption'])){
       $caption = $attributes['caption'];
     } else
@@ -69,7 +64,7 @@ class MT4_PortfolioInstrument_Plugin {
 
     ob_start();
     $items = mt4accounts_get_api()->get_portfolio_instruments($id);
-    include_once( dirname( __FILE__ ) . "/templates/{$template}/instrument.php");
+    include_once( dirname( __FILE__ ) . "/templates/portfolio/instrument.php");
 
     $data = ob_get_contents();
     ob_clean();

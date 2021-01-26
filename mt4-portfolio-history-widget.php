@@ -58,11 +58,6 @@ class MT4_PortfolioHistory_Plugin{
       return false;
     }
 
-   if(isset($attributes['template']))
-      $template = $attributes['template']?$attributes['template']:'default';
-    else
-      $template = 'default';
-
     $caption = '';
     if (isset($attributes['caption'])){
       $caption = $attributes['caption'];
@@ -97,7 +92,7 @@ class MT4_PortfolioHistory_Plugin{
     }
 
     $items = '['. implode(',', $data). '];';
-    include_once( dirname( __FILE__ ) . "/templates/{$template}/history.php");
+    include_once( dirname( __FILE__ ) . "/templates/portfolio/history.php");
 
     $data = ob_get_contents();
     ob_clean();

@@ -3,7 +3,7 @@
 <script type="text/javascript">
   jQuery(document).ready(function() {
 
-      Highcharts.chart('instrument_<?php echo $account_number; ?>', {
+      Highcharts.chart('instrument_<?php echo $id; ?>', {
           chart: {
               plotBackgroundColor: null,
               plotBorderWidth: null,
@@ -43,5 +43,5 @@
       });
   });
 </script>
-<div id="instrument_<?php echo $account_number; ?>">
+<div id="instrument_<?php echo $id; ?>">
 </div>
